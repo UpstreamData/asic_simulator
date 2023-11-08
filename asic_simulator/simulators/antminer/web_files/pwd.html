@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>修改密码</title>
+    </head>
+    <body>
+        <div class="pool-con" id="pwdSet">
+            <div class="row common-skin clearfix">
+                <div class="row-content">
+                    <div class="common-form">
+                        <div class="forms-title" data-locale="pwdMdf"></div>
+                        <div class="forms-content">
+                            <form action="">
+                                <table cellspacing="0" cellpadding="0" class="table-form">
+                                    <tbody>
+                                        <tr>
+                                            <td align="right" data-locale="currentPwd" style="width: 33.3%;"></td>
+                                            <td align="left">
+                                                <input v-model="pwdForm.curPwd" type="password" class="w408" @blur="iptBlur('curPwd')">
+                                                <div class="ipt-tip" v-if="curPwdTip===true" data-locale="curPwdTip"></div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right" data-locale="newPwd"></td>
+                                            <td align="left">
+                                                <input v-model="pwdForm.newPwd" type="password" class="w408" @blur="iptBlur('newPwd')">
+                                                <div class="ipt-tip" v-if="newPwdTip===true" data-locale="newPwdTip"></div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right" data-locale="confirmPwd"></td>
+                                            <td align="left">
+                                                <input v-model="pwdForm.confirmPwd" type="password" class="w408" @blur="iptBlur('confirmPwd')">
+                                                <div class="ipt-tip" v-if="confirmPwdTip===true" data-locale="confirmPwdTip"></div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td align="left"><input type="button" class="btn-blue btn-common w408" value="" data-i18n-value="saveBtnTxt" @click="savePwd"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-if="showLoading" class="loading-box">
+                <div class="loading-circle"></div>
+            </div>
+        </div>
+        <script src="js/jquery.min.js"></script>
+        <script src="js/jquery-properties.min.js"></script>
+        <script src="js/vue.min.js"></script>
+        <script type="text/javascript" src="/js/pwd.js"></script>
+    </body>
+</html>

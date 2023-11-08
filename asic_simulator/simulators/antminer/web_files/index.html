@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ANTMINER</title>
+        <meta charset="utf-8">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="default">
+        <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1">
+        <meta name="theme-color" content="#3cc693">
+        <meta name="author" content="ANTMINER">
+        <meta data-n-head="true" data-hid="description" name="description" content="ANTMINER">
+        <meta data-n-head="true" data-hid="keywords" name="keywords" content="ANTMINER">
+        <meta http-equiv="expires" content="0">
+        <meta http-equiv="pragma" content="no-cache">
+        <meta http-equiv="cache-control" content="no-cache">
+        <link rel="shortcut icon" sizes="32x32" href="static/favicon.ico" type="image/x-icon">
+    </head>
+    <body>
+        <div class="layout-l fl">
+            <div class="logo-box"><img src="/static/logo.png" alt="ANTMINER" class="logo"> <img src="/static/mini-logo.png" alt="ANTMINER" class="mini-logo"></div>
+            <div class="menu-box">
+                <ul class="menu-t menu">
+                    <li class="item" data-id="dashboard"><i class="dshBoard-ico icon"></i> <span class="itm-name" data-locale="dashboard"></span></li>
+                    <li class="item" data-id="miner"><i class="miner-ico icon"></i> <span class="itm-name" data-locale="miner"></span></li>
+                    <li class="item" data-id="ip"><i class="ip-ico icon"></i> <span class="itm-name" data-locale="IP"></span></li>
+                    <li class="item" data-id="system"><i class="system-ico icon"></i> <span class="itm-name" data-locale="system"></span> <i class="drop-icon"></i></li>
+                    <ul class="sub-menu menu" id="systemSubMenu">
+                        <li class="item" data-id="pwd"><i class="pwd-ico icon"></i> <span class="itm-name" data-locale="password"></span></li>
+                        <li class="item" data-id="update"><i class="update-ico icon"></i> <span class="itm-name" data-locale="update"></span></li>
+                    </ul>
+                </ul>
+                <ul class="menu-b menu">
+                    <li class="item" data-id="blog"><i class="blog-ico icon"></i> <span class="itm-name" data-locale="blog"></span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="layout-r fr" id="homePage">
+            <div class="head clearfix">
+                <div class="common-inner clearfix">
+                    <div class="fl"><span class="menu-switch" id="menu-switch"></span> <span class="miner-name"><span class="miner-type"></span></span> <span class="miner-info"><i class="bg-l"></i> <span class="label" data-locale="algorithm"></span> <span class="algorithm">SHA256d</span><i class="bg-r"></i> </span><span class="stateY miner-state" data-locale="stateOnline"></span> <span class="stateN miner-state" data-locale="stateOffline"></span></div>
+                    <div class="fr-box fr">
+                        <span class="switch-box m-r-5"><span class="label" data-locale="blink"></span> <span class="switch" :class="[{'on': switchHead}]" @click="switchFun"><i></i></span> </span><span class="undate-time"><i class="time-icon"></i> <span class="label" data-locale="refreshTm"></span> <span class="time" id="refreshTime">2019-12-22 10：24：20</span> </span>
+                        <span class="lang">
+                            <span class="login-lang-currentBox"><i class="flag zh"></i> <span class="text">简体中文</span> <i class="h-d-icon"></i></span>
+                            <ul class="langDrop dropdown-box">
+                                <li data-id="zh"><i class="flag zh"></i> 简体中文</li>
+                                <li data-id="en"><i class="flag en"></i> English</li>
+                            </ul>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="main-content">
+                <div class="content common-inner" id="content"></div>
+            </div>
+            <div class="footer clearfix">
+                <div class="common-inner">
+                    <div class="fl"><span class="label" data-locale="firmwareVersion"></span> <span class="compile-time"></span> <span class="label" data-locale="ipAdress"></span> <span class="ip-text"></span> <span class="label">MAC</span> <span class="mac-text"></span> <span class="label" data-locale="firmwareType"></span> <span class="fmType"></span></div>
+                    <div class="fr"><input type="button" value="" data-i18n-value="restore" class="btn-red btn-common" id="restore"> <input type="button" value="" data-i18n-value="restart" class="btn-blue btn-common" id="restart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="message success">
+            <div class="inner"><span class="icon"></span><span class="text" data-locale=""></span></div>
+        </div>
+        <div class="message error">
+            <div class="inner"><span class="icon"></span><span class="text" data-locale=""></span></div>
+        </div>
+        <div class="common-popUp" id="restorePopUp">
+            <div class="common-popUp-inner">
+                <div class="con">
+                    <div class="popUp-title" data-locale="rstrTitle"></div>
+                    <div class="popUp-close"></div>
+                    <div class="popUp-con">
+                        <p class="Tips-1"><span data-locale="rstrTip1"></span><span class="clr-FF3B47"></span><span data-locale="rstrTip2"></span></p>
+                        <p data-locale="rstrTip3" class="Tips-2"></p>
+                    </div>
+                    <div class="popUp-btnbox"><input type="button" value="" data-i18n-value="btnCancle" class="btn-cancle btn-common"> <input type="button" value="" data-i18n-value="restore" class="btn-red btn-common" id="restoreFun"></div>
+                </div>
+            </div>
+            <div class="loading-box" id="restoreLoading" style="display: none;">
+                <div class="loading-circle"></div>
+            </div>
+        </div>
+        <div class="common-popUp" id="restartPopUp">
+            <div class="common-popUp-inner">
+                <div class="con">
+                    <div class="popUp-title" data-locale="rstrtTitle"></div>
+                    <div class="popUp-close"></div>
+                    <div class="popUp-con">
+                        <p class="Tips-1"><span data-locale="rstrtTip1"></span><span class="clr-FF3B47"></span><span data-locale="rstrtTip2"></span></p>
+                        <p data-locale="rstrtTip3" class="Tips-2"></p>
+                    </div>
+                    <div class="popUp-btnbox"><input type="button" value="" data-i18n-value="btnCancle" class="btn-cancle btn-common"> <input type="button" value="" data-i18n-value="restart" class="btn-blue btn-common" id="restartFun"></div>
+                </div>
+            </div>
+            <div class="loading-box" id="restartLoading" style="display: none;">
+                <div class="loading-circle"></div>
+            </div>
+        </div>
+        <script src="/js/jquery.min.js"></script>
+        <script src="/js/jquery-properties.min.js"></script>
+        <script src="/js/vue.min.js"></script>
+        <script type="text/javascript" src="/js/index.js"></script>
+    </body>
+</html>

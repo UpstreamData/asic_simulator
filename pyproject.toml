@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "asic-simulator"
+version = "0.1.0"
+description = ""
+authors = ["UpstreamData <brett@upstreamdata.ca>"]
+packages = [{include = "asic_simulator"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = {git = "https://github.com/ordinary-jamie/fastapi.git", rev = "feat/http-digest"}
+cryptography = "^41.0.4"
+passlib = "^1.7.4"
+hypercorn = "^0.14.4"
+
+[tool.poetry.group.color]
+optional = true
+
+[tool.poetry.group.color.dependencies]
+colorama = "^0.4.6"
+rich = "^13.5.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

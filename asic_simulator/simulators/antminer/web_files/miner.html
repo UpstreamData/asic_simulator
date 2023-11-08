@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>矿机设置</title>
+    </head>
+    <body>
+        <div class="pool-con" id="MinerSet">
+            <div class="row common-skin clearfix">
+                <div class="row-content">
+                    <div class="common-form">
+                        <div class="forms-content">
+                            <form action="" id="poolForm" class="miner-pool-form">
+                                <div class="table-title"><span data-locale="poolTabTitle"></span></div>
+                                <table cellspacing="0" cellpadding="0" class="table-form" id="poolTable">
+                                    <thead>
+                                        <tr>
+                                            <td></td>
+                                            <td align="left"><span class="tip-qa-box"><span class="label"><span data-locale="mineAddr"></span></span></span></td>
+                                            <td align="left"><span class="tip-qa-box"><span class="label"><span data-locale="minerName"></span></span></span></td>
+                                            <td align="left" data-locale="miningPwd"></td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(item, index) in minerForm.pools" :key="`pool`+index">
+                                            <td align="right"><span data-locale="pool"></span>{{index+1}}</td>
+                                            <td><input v-model="minerForm['pools'][index]['url']" :key="`pl+${index}+ipt`" type="text" class="w280"></td>
+                                            <td><input v-model="minerForm['pools'][index]['user']" :key="`user+${index}+ipt`" type="text" class="w220"></td>
+                                            <td><input v-model="minerForm['pools'][index]['pass']" :key="`pass+${index}+ipt`" type="text" class="w184"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </form>
+                            <form action="" class="miner-machine-form">
+                                <div class="table-title"><span data-locale="minerTabTitle"></span></div>
+                                <table cellspacing="0" cellpadding="0" class="table-form">
+                                    <tbody>
+                                        <tr>
+                                            <td align="left"><span v-model="minerForm['bitmain-fan-ctrl']" class="selfecheckbox" :class="{'checked': minerForm['bitmain-fan-ctrl'] == true}" @click="checkFun('bitmain-fan-ctrl')"><label for="checkbox1" data-locale="bitmain-fan-ctrl"></label></span></td>
+                                            <td align="left" colspan="2"><input v-model="minerForm['bitmain-fan-pwm']" type="text"></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="left"><span data-locale="miner-mode"></span></td>
+                                            <td align="left" colspan="2">
+                                                <select name="" id="protoSelect" @change="modeSelectChange(minerForm['miner-mode'])" v-model="minerForm['miner-mode']">
+                                                    <option v-for="item in modeList" :value="item.id" :key="item.id">{{item.text}}</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr v-if="trShow === true">
+                                            <td align="left"><span data-locale="freq-level"></span></td>
+                                            <td align="left" colspan="2"><input v-model="minerForm['freq-level']" type="text"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </form>
+                            <input type="button" class="btn-blue btn-common w280" value="" data-i18n-value="saveBtnTxt" @click="saveMineSet">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-if="showLoading" class="loading-box">
+                <div class="loading-circle"></div>
+            </div>
+        </div>
+        <script src="js/jquery.min.js"></script>
+        <script src="js/jquery-properties.min.js"></script>
+        <script src="js/vue.min.js"></script>
+        <script type="text/javascript" src="/js/miner.js"></script>
+    </body>
+</html>

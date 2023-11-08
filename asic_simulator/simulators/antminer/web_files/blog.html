@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>矿机日志</title>
+    </head>
+    <body>
+        <div class="blog-con" id="blogPage">
+            <div class="tab"><span :class="[{'on': currentTab ==='clog'}]" @click="switchTab('clog')" data-locale="clog"></span> <span :class="[{'on': currentTab ==='hlog'}]" @click="switchTab('hlog')" data-locale="hlog"></span></div>
+            <div class="row common-skin clearfix">
+                <div class="row-content" v-if="currentTab ==='clog'">
+                    <pre class="log-content" style="word-break: break-all; word-wrap: break-word;"> </pre>
+                </div>
+                <div class="row-content" v-if="currentTab ==='hlog'">
+                    <pre class="log-content" style="word-break: break-all; word-wrap: break-word;"> </pre>
+                </div>
+            </div>
+        </div>
+        <script src="/js/jquery.min.js"></script>
+        <script src="/js/jquery-properties.min.js"></script>
+        <script src="/js/vue.min.js"></script>
+        <script type="text/javascript" src="/js/blog.js"></script>
+    </body>
+</html>

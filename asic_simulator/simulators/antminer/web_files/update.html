@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>固件升级</title>
+    </head>
+    <body>
+        <div class="pool-con">
+            <div class="row common-skin clearfix">
+                <div class="row-content">
+                    <div class="common-form">
+                        <div class="forms-title" data-locale="update"></div>
+                        <div class="forms-content">
+                            <form enctype="multipart/form-data">
+                                <table cellspacing="0" cellpadding="0" class="table-form" style="padding: 38px 0;">
+                                    <tbody>
+                                        <tr>
+                                            <td align="right" data-locale="updateFile" style="width: 33.3%;"></td>
+                                            <td align="left"><input type="text" class="w408" id="fileInput"> <input type="file" class="w408" value="" id="file" style="display: none"> <input type="button" class="btn-upload" id="submitBtn" value="" style="width:100px;height:30px;color:#4682FF;vertical-align:bottom;border:1px solid #4682FF;box-shadow: unset"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div id="progress"><span class="red"></span></div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right"></td>
+                                            <td align="left"><span class="selfecheckbox checked" id="updateCheck" type="checkbox"><label for="updateCheck" data-locale="keepSettings"></label></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td align="left"><input type="button" class="btn-blue btn-common w408" value="" data-i18n-value="updateBtnTxt" id="updateFile"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="loading-box" id="updateLoading" style="display: none;">
+                <div class="upload-text-div" data-locale="updateMsg"></div>
+                <div class="loading-circle"></div>
+            </div>
+        </div>
+        <script src="js/jquery.min.js"></script>
+        <script src="js/jquery-properties.min.js"></script>
+        <script type="text/javascript" src="/js/update.js"></script>
+    </body>
+</html>

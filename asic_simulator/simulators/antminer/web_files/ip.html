@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>IP配置</title>
+    </head>
+    <body>
+        <div class="pool-con" id="ipSet">
+            <div class="row common-skin clearfix">
+                <div class="row-content">
+                    <div class="common-form">
+                        <div class="forms-title" data-locale="IP"></div>
+                        <div class="forms-content">
+                            <form action="">
+                                <table cellspacing="0" cellpadding="0" class="table-form">
+                                    <tbody>
+                                        <tr>
+                                            <td align="right" data-locale="netInfo" style="width: 33.3%;"></td>
+                                            <td align="left">
+                                                <div>
+                                                    <p>eth0</p>
+                                                    <p><span data-locale="ipMac"></span>{{ipInfo.mac}}</p>
+                                                    <p><span data-locale="ipAddress1"></span>{{ipInfo.ip}}</p>
+                                                    <p><span data-locale="ipSub"></span>{{ipInfo.mask}}</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right" data-locale="ipHost"></td>
+                                            <td align="left"><input type="text" class="w408" value="" v-model="ipForm.ipHost"></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right" data-locale="ipPro"></td>
+                                            <td align="left">
+                                                <select class="w430" name="" id="protoSelect" @change="proSelectChange(ipForm.ipPro)" v-model="ipForm.ipPro">
+                                                    <option v-for="item in sltList" :value="item.id" :key="item.id">{{item.text}}</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr v-if="trShow === true">
+                                            <td align="right" data-locale="ipAdress"></td>
+                                            <td align="left"><input type="text" class="w408" v-model="ipForm.ipAddress"></td>
+                                        </tr>
+                                        <tr v-if="trShow === true">
+                                            <td align="right" data-locale="ipSub"></td>
+                                            <td align="left"><input type="text" class="w408" v-model="ipForm.ipSub"></td>
+                                        </tr>
+                                        <tr v-if="trShow === true">
+                                            <td align="right" data-locale="ipGateway"></td>
+                                            <td align="left"><input type="text" class="w408" v-model="ipForm.ipGateway"></td>
+                                        </tr>
+                                        <tr v-if="trShow === true">
+                                            <td align="right" data-locale="ipDns"></td>
+                                            <td align="left"><input type="text" class="w408" v-model="ipForm.ipDns"></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td align="left"><input type="button" class="btn-blue btn-common w408" value="" data-i18n-value="saveBtnTxt" @click="saveIpSet"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </form>
+                        </div>
+                        <div v-if="showLoading" class="loading-box">
+                            <div class="loading-circle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="js/jquery.min.js"></script><script src="js/jquery-properties.min.js"></script>
+        <script src="js/vue.min.js"></script><script type="text/javascript" src="/js/ip.js"></script>
+    </body>
+</html>

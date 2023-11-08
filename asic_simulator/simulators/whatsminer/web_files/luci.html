@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>WhatsMiner - LuCI</title>
+		<!--[if lt IE 9]><script src="/luci-static/bootstrap/html5.js?v=git-16.336.70424-1fd43b4"></script><![endif]-->
+		<meta name="viewport" content="initial-scale=1.0">
+		<link rel="stylesheet" href="/luci-static/bootstrap/cascade.css?v=git-16.336.70424-1fd43b4">
+		<link rel="stylesheet" media="only screen and (max-device-width: 854px)" href="/luci-static/bootstrap/mobile.css?v=git-16.336.70424-1fd43b4" type="text/css" />
+		<link rel="shortcut icon" href="/luci-static/bootstrap/favicon.ico">
+		<script src="/luci-static/resources/xhr.js?v=git-16.336.70424-1fd43b4"></script>
+	</head>
+
+	<body class="lang_en">
+		<header>
+			<div class="fill">
+				<div class="container">
+					<a class="brand" href="#">WhatsMiner</a>
+
+					<div class="pull-right">
+
+						<span id="xhr_poll_status" style="display:none" onclick="XHR.running() ? XHR.halt() : XHR.run()">
+							<span class="label success" id="xhr_poll_status_on">Auto Refresh on</span>
+							<span class="label" id="xhr_poll_status_off" style="display:none">Auto Refresh off</span>
+						</span>
+					</div>
+				</div>
+			</div>
+		</header><div id="maincontent" class="container">
+
+
+
+
+<form method="post" action="/cgi-bin/luci"><div class="cbi-map">
+		<h2 name="content">Authorization Required</h2>
+		<div class="cbi-map-descr">
+			Please enter your username and password.
+		</div>
+		<fieldset class="cbi-section"><fieldset class="cbi-section-node">
+			<div class="cbi-value">
+				<label class="cbi-value-title">Username</label>
+				<div class="cbi-value-field">
+					<input class="cbi-input-user" type="text" name="luci_username" value="admin" />
+				</div>
+			</div>
+			<div class="cbi-value cbi-value-last">
+				<label class="cbi-value-title">Password</label>
+				<div class="cbi-value-field">
+					<input class="cbi-input-password" type="password" name="luci_password" />
+				</div>
+			</div>
+		</fieldset></fieldset>
+	</div>
+
+	<div>
+		<input type="submit" value="Login" class="cbi-button cbi-button-apply" />
+		<input type="reset" value="Reset" class="cbi-button cbi-button-reset" />
+	</div>
+</form>
+<script type="text/javascript">//<![CDATA[
+	var input = document.getElementsByName('luci_password')[0];
+	if (input)
+		input.focus();
+//]]></script>
+
+
+
+<script type="text/javascript">//<![CDATA[
+	if (document.location.protocol != 'https:') {
+		var url = 'https://' + window.location.hostname + ':' + '443' + window.location.pathname;
+		var img=new Image;
+		img.onload=function(){window.location = url};
+		img.src='https://' + window.location.hostname + ':' + '443' + '/luci-static/resources/cbi/up.gif?' + Math.random();;
+		setTimeout(function(){
+			img.src=''
+		}, 5000);
+	}
+//]]></script>
+
+
+
+
+   <footer>
+    <a href="https://github.com/openwrt/luci">Powered by LuCI Master (git-16.336.70424-1fd43b4)</a> / LEDE Reboot 17.01.4 r3560-79f57e422d
+
+   </footer>
+   </div>
+  </div>
+ </body>
+</html>

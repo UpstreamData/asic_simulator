@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>dashboard</title>
+    </head>
+    <body>
+        <div class="dashboard-con" id="Dashboard">
+            <div class="states-row row clearfix">
+                <div class="col" v-for="(item, index) in summaryData">
+                    <div class="col-inner common-skin clearfix">
+                        <div class="fl">
+                            <h4 class="state-h4" v-if="item.type === 'rate'" data-locale="rate"></h4>
+                            <h4 class="state-h4" v-else-if="item.type === 'network'" data-locale="network"></h4>
+                            <h4 class="state-h4" v-else-if="item.type === 'fans'" data-locale="fans"></h4>
+                            <h4 class="state-h4" v-else data-locale="temp"></h4>
+                        </div>
+                        <div class="fr"><span v-if="item.status === 's'" class="stateNormal state-icon" data-locale="stateNormal"></span>
+							<span v-else class="stateUnormal state-icon" data-locale="stateAbnormal"></span>
+						</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row clearfix">
+                <div class="col-hash common-skin fl">
+                    <table cellspacing="0" cellpadding="0" class="hashrate">
+                        <tr>
+                            <td class="b-r">
+								<span class="label" data-locale="rate"></span>
+								<span class="clr-4682FF num">
+									{{summaryObj.rate_5s}}
+									<span class="label" style="display:inline-block;white-space:nowrap">
+										{{summaryObj.rate_unit}}
+									</span>
+								</span>
+							</td>
+                            <td>
+								<span class="label" data-locale="allHash"></span>
+								<span class="clr-1C1C1C num">
+									{{summaryObj.rate_avg}}
+									<span class="label" style="display:inline-block;white-space:nowrap">
+										{{summaryObj.rate_unit}}
+									</span>
+								</span>
+							</td>
+                        </tr>
+                        <tr class="line2">
+                            <td class="b-r">
+                                <span class="tip-qa-box">
+                                    <span class="label">
+                                        <i data-locale="poolRefuse"></i>
+                                        <i class="tip-qa">
+                                            <div class="dropdown">
+                                                <div class="inner" data-locale="poolRefuse"></div>
+                                            </div>
+                                        </i>
+                                    </span>
+                                </span>
+                                <span class="clr-2DAF32 num">{{summaryObj.rejectRacio}}</span>
+                            </td>
+                            <td>
+								<span class="label" data-locale="mRunTm"></span>
+								<span class="clr-1C1C1C" v-if="summaryObj.elapsed">
+									<i class="num">{{summaryObj.elapsed.day}}</i>
+									<i data-locale="day" class="clr-555"></i>
+									<i class="num">{{summaryObj.elapsed.hour}}</i>
+									<i data-locale="hour" class="clr-555"></i>
+									<i class="num">{{summaryObj.elapsed.min}}</i>
+									<i data-locale="min" class="clr-555"></i>
+									<i class="num">{{summaryObj.elapsed.sec}}</i>
+									<i data-locale="sec" class="clr-555"></i>
+								</span>
+							</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-chart common-skin fr">
+                    <h3 class="common-title" data-locale="lineTtl"></h3>
+                    <div id="line" style="height: 259px;" data-locale="nodata"></div>
+                </div>
+            </div>
+            <div class="row common-skin clearfix">
+                <h3 class="common-title" data-locale="pool"></h3>
+                <div class="row-content">
+                    <table cellpadding="0" cellspacing="0" class="common-table" width="100%">
+                        <thead>
+                            <tr>
+                                <th align="left" data-locale="pool"></th>
+                                <th>
+                                    <span class="tip-qa-box">
+                                        <span class="label">
+                                            <span data-locale="mineAddr"></span>
+                                            <i class="tip-qa">
+                                                <div class="dropdown">
+                                                    <div class="inner left" data-locale="mineAddr"></div>
+                                                </div>
+                                            </i>
+                                        </span>
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="tip-qa-box">
+                                        <span class="label">
+                                            <span data-locale="minerName"></span>
+                                            <i class="tip-qa">
+                                                <div class="dropdown">
+                                                    <div class="inner left" data-locale="minerNameTip"></div>
+                                                </div>
+                                            </i>
+                                        </span>
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="tip-qa-box">
+                                        <span class="label">
+                                            <span data-locale="minerPool"></span>
+                                            <i class="tip-qa">
+                                                <div class="dropdown">
+                                                    <div class="inner left" data-locale="minerPoolTip"></div>
+                                                </div>
+                                            </i>
+                                        </span>
+                                    </span>
+                                </th>
+                                <th>Diff</th>
+                                <th>Priority</th>
+                                <th>Accepted</th>
+                                <th>DiffA</th>
+                                <th>DiffR</th>
+                                <th>Rejected</th>
+                                <th>Stale</th>
+                                <th>LSDiff</th>
+                                <th align="right">LSTime</th>
+                            </tr>
+                        </thead>
+                        <tbody v-if="poolData.length > 1">
+                            <tr v-for="(itemPl, index) in poolData">
+                                <td align="left">{{index + 1}}</td>
+                                <td>{{itemPl.url}}</td>
+                                <td>{{itemPl.user}}</td>
+                                <td v-if="itemPl.status === 'Alive'"><span class="normal lj-state" data-locale="stateNormal">{{itemPl.status}}</span></td>
+                                <td v-else><span class="unNormal lj-state" data-locale="stateAbnormal">{{itemPl.status}}</span></td>
+                                <td>{{itemPl.diff}}</td>
+                                <td>{{itemPl.priority}}</td>
+                                <td>{{itemPl.accepted}}</td>
+                                <td>{{itemPl.diffa}}</td>
+                                <td>{{itemPl.diffr}}</td>
+                                <td>{{itemPl.rejected}}</td>
+                                <td>{{itemPl.stale}}</td>
+                                <td>{{itemPl.lsdiff}}</td>
+                                <td align="right">{{itemPl.lstime}}</td>
+                            </tr>
+                        </tbody>
+                        <tbody v-else>
+                            <tr>
+                                <td colspan="13" data-locale="nodata"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row common-skin clearfix">
+                <h3 class="common-title" id="mnrTitle">{{minerType}}</h3>
+                <div class="row-content">
+                    <table cellpadding="0" cellspacing="0" class="common-table" width="100%">
+                        <thead>
+                            <tr>
+                                <th align="left" data-locale="hashPlate"></th>
+                                <th align="right" data-locale="chipNum"></th>
+                                <th align="right" data-locale="hwNum"></th>
+                                <th align="right" data-locale="runFrequency"></th>
+                                <th align="right" data-locale="rate"></th>
+                                <th align="right" data-locale="thHash"></th>
+                                <th align="right" data-locale="picTem"></th>
+                                <th align="right" data-locale="chipTem"></th>
+                                <th align="right" data-locale="chipState"></th>
+                            </tr>
+                        </thead>
+                        <tbody v-if="chainDataArr.length>0">
+                            <tr v-for="(item,index) in chainDataArr">
+                                <td align="left">{{item.index +1}}</td>
+                                <td align="right">{{item.asic_num}}</td>
+                                <td align="right">{{item.hw}}</td>
+                                <td align="right">{{item.freq_avg}}</td>
+                                <td align="right"><span class="stateNormal">{{item.rate_real}}</span> <span class="unit">{{item.rate_unit}}</span></td>
+                                <td align="right"><span>{{item.rate_ideal}}</span> <span class="unit">{{item.rate_unit}}</span></td>
+                                <td align="right"><span>{{item.temp_pic}}</span></td>
+                                <td align="right"><span>{{item.temp_chip}}</span></td>
+                                <td align="right">
+                                    <div class="xp-state-box">
+                                        <span class="xp-state-normal xp-state" :class="[{'xp-state-normal': item.pcb_state === 'o'}, {'xp-state-unNormal': item.pcb_state !== 'o'}]">
+                                            <i v-if="item.pcb_state === 'o'" class="label" data-locale="stateNormal"></i> <i v-else class="label" data-locale="stateAbnormal"></i>
+                                            <i class="icon">
+                                                <div class="xp-dropdown">
+                                                    <div class="title clearfix">
+                                                        <div class="fl"><span data-locale="hashBoard"></span>{{index +1}}--<span data-locale="chipStatus"></span></div>
+                                                        <div class="fr" v-if="item.pcb_stateXnum > 0"><span data-locale="stateAbnormal"></span> <span class="stateUnormal">{{item.pcb_stateXnum}}</span></div>
+                                                        <div v-else><span data-locale="stateNormal"></span></div>
+                                                    </div>
+                                                    <div class="xp-dropdown-inner clearfix">
+                                                        <table class="xp-asic-table" cellpadding="0" cellspacing="0">
+                                                            <tr v-for="(itmTr, idxTr) in item.miner_asic.tpl[0]">
+                                                                <td v-for="(itmTd, idxTd) in item.miner_asic.tpl[1]">
+                                                                    <div v-if="item.miner_asic.tplArr[item.miner_asic.tpl[1] * idxTr + idxTd] != 0 && item.miner_asic.tplArr[item.miner_asic.tpl[1] * idxTr + idxTd]">
+                                                                        <div v-if="item.asic_arr[ item.miner_asic.tplArr[item.miner_asic.tpl[1] * idxTr + idxTd] - 1 ] === 'x'" class="xp-item-state-unNormal">{{item.miner_asic.tplArr[item.miner_asic.tpl[1] * idxTr + idxTd]}}</div>
+                                                                        <div v-else class="xp-item-state-normal">{{item.miner_asic.tplArr[item.miner_asic.tpl[1] * idxTr + idxTd]}}</div>
+                                                                    </div>
+                                                                    <div v-else></div>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                        <div class="xp-dropdown-inner clearfix"></div>
+                                                    </div>
+                                                </div>
+                                            </i>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody v-else>
+                            <tr>
+                                <td colspan="9" data-locale="nodata"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div id="fanWrap">
+                        <table cellpadding="0" cellspacing="0" class="common-table">
+                            <thead>
+                                <tr>
+                                    <th align="left" data-locale="fanTitle"></th>
+                                    <th v-for="(item, index) in fanData"><span data-locale="fanTitle"></span>{{(index-0)+1}} <span data-locale="fanSpeed"></span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td align="left">Speed(r/min)</td>
+                                    <td v-for="(item, index) in fanData"><span v-if="item && item > 0">{{item}}</span> <span v-else class="stateUnormal">0</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="js/jquery.min.js"></script>
+		<script src="js/jquery-properties.min.js"></script>
+		<script src="js/echarts.min.js"></script>
+		<script src="js/vue.min.js"></script>
+		<script type="text/javascript" src="/js/dashboard.js"></script>
+    </body>
+</html>
