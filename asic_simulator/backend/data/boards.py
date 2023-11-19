@@ -9,10 +9,10 @@ from asic_simulator.backend.data.hashrate import Hashrate, HashUnit
 class BoardInfo:
     ideal_chips: int = 63
     chips: int = 63
-    ideal_hashrate: Hashrate = Hashrate(4, HashUnit.TH)
-    hashrate: Hashrate = Hashrate(4, HashUnit.TH)
     board_temp: float = 60
     chip_temp: float = 80
+    ideal_hashrate: Hashrate = field(default_factory=lambda: Hashrate(4, HashUnit.TH))
+    hashrate: Hashrate = field(default_factory=lambda: Hashrate(4, HashUnit.TH))
 
 
 @dataclass

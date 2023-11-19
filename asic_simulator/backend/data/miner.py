@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import random
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from asic_simulator.backend.data.boards import BoardInfo
 from asic_simulator.backend.data.fans import FanInfo
@@ -13,8 +13,8 @@ class MinerInfo:
     model: str = "S9"
     mac: str = ":".join([f"{random.randint(0, 255):02X}" for _ in range(6)])
     board_count: int = 3
-    board_info: BoardInfo = BoardInfo()
+    board_info: BoardInfo = field(default_factory=lambda: BoardInfo())
     fan_count: int = 2
-    fan_info: FanInfo = FanInfo()
+    fan_info: FanInfo = field(default_factory=lambda: FanInfo())
     fan_manual: bool = False
     fan_speed: float = 100

@@ -189,9 +189,9 @@ class AntminerRPCHandler:
                 [acs_str[i : i + 3] for i in range(0, len(acs_str), 3)]
             )
             board_data[f"chain_hw{board+1}"] = 10
-            board_data[f"chain_rate{board+1}"] = str(
-                self.backend.boards[board].hashrate
-            )
+            board_data[f"chain_rate{board+1}"] = str(float(
+                self.backend.boards[board].hashrate.into(self.hash_unit)
+            ))
             board_data[f"freq{board+1}"] = 545
             board_data[f"temp{board+1}"] = self.backend.boards[board].info.board_temp
             board_data[f"temp2_{board+1}"] = self.backend.boards[board].info.chip_temp
