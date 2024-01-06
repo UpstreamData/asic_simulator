@@ -265,7 +265,7 @@ class WhatsminerRPCHandler:
                         "Slot": i,
                         "Enabled": "Y",
                         "Status": "Alive" if not board.hashrate == 0 else "Dead",
-                        "Temperature": board.board_temp,
+                        "Temperature": board.info.board_temp,
                         "Chip Frequency": 734,
                         "Fan Speed In": self.backend.fans[0].rpm
                         if len(self.backend.fans) > 0
@@ -273,11 +273,11 @@ class WhatsminerRPCHandler:
                         "Fan Speed Out": self.backend.fans[1].rpm
                         if len(self.backend.fans) > 1
                         else 0,
-                        "MHS av": round(board.hashrate.into(self.hash_unit), 2),
-                        "MHS 5s": round(board.hashrate.into(self.hash_unit), 2),
-                        "MHS 1m": round(board.hashrate.into(self.hash_unit), 2),
-                        "MHS 5m": round(board.hashrate.into(self.hash_unit), 2),
-                        "MHS 15m": round(board.hashrate.into(self.hash_unit), 2),
+                        "MHS av": round(float(board.info.hashrate.into(self.hash_unit)), 2),
+                        "MHS 5s": round(float(board.info.hashrate.into(self.hash_unit)), 2),
+                        "MHS 1m": round(float(board.info.hashrate.into(self.hash_unit)), 2),
+                        "MHS 5m": round(float(board.info.hashrate.into(self.hash_unit)), 2),
+                        "MHS 15m": round(float(board.info.hashrate.into(self.hash_unit)), 2),
                         "Accepted": 10000,
                         "Rejected": 100,
                         "Hardware Errors": 100,
@@ -296,9 +296,9 @@ class WhatsminerRPCHandler:
                         "Upfreq Complete": 1,
                         "Effective Chips": board.chips,
                         "PCB SN": f"FAKE12AB34CD56EF78{i}",
-                        "Chip Temp Min": board.chip_temp,
-                        "Chip Temp Max": board.chip_temp,
-                        "Chip Temp Avg": board.chip_temp,
+                        "Chip Temp Min": board.info.chip_temp,
+                        "Chip Temp Max": board.info.chip_temp,
+                        "Chip Temp Avg": board.info.chip_temp,
                     }
                     for i, board in enumerate(self.backend.boards)
                 ]

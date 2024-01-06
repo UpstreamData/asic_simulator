@@ -8,7 +8,7 @@ from asic_simulator.simulators.whatsminer.web import WhatsminerWebHandler
 
 
 class WhatsminerSimulator:
-    def __init__(self, backend: MinerSimulatorBackend, hr_unit: HashUnit = HashUnit.GH):
+    def __init__(self, backend: MinerSimulatorBackend, hr_unit: HashUnit = HashUnit.MH):
         self.backend = backend
         self.rpc = WhatsminerRPCHandler(backend, hr_unit)
         self.web = WhatsminerWebHandler(backend, hr_unit)
