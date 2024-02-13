@@ -18,6 +18,7 @@ class AntminerRPCHandler:
             "stats": self.stats,
             "summary": self.summary,
             "version": self.version,
+            "new_stats": self.new_stats,
         }
 
     async def run(self):
@@ -39,14 +40,20 @@ class AntminerRPCHandler:
             return
 
         command = data.get("command")
-        result = self.handle_command(command)
+        params = {i: data[i] for i in data if not i == "command"}
+        result = self.handle_command(command, **params)
 
         writer.write(json.dumps(result).encode())
         await writer.drain()
         writer.close()
 
     def handle_command(self, command: str, **params):
-        if command in self.commands:
+        if "new_api" in params:
+            if params["new_api"]:
+                if f"new_{command}" in self.commands:
+                    log.success("RPC", f"{command}, new_api")
+                    return self._handle_success(f"new_{command}")
+        elif command in self.commands:
             log.success("RPC", command)
             return self._handle_success(command, **params)
         log.failure("RPC", command)
@@ -189,9 +196,9 @@ class AntminerRPCHandler:
                 [acs_str[i : i + 3] for i in range(0, len(acs_str), 3)]
             )
             board_data[f"chain_hw{board+1}"] = 10
-            board_data[f"chain_rate{board+1}"] = str(float(
-                self.backend.boards[board].hashrate.into(self.hash_unit)
-            ))
+            board_data[f"chain_rate{board+1}"] = str(
+                float(self.backend.boards[board].hashrate.into(self.hash_unit))
+            )
             board_data[f"freq{board+1}"] = 545
             board_data[f"temp{board+1}"] = self.backend.boards[board].info.board_temp
             board_data[f"temp2_{board+1}"] = self.backend.boards[board].info.chip_temp
@@ -365,5 +372,99 @@ class AntminerRPCHandler:
                         "Type": f"{self.backend.miner_info.make} {self.backend.miner_info.model}",
                     }
                 ]
+            },
+        }
+
+    def new_stats(self):
+        return {
+            "msg": "stats",
+            "code": 22,
+            "result": {
+                "STATS": [
+                    {
+                        "elapsed": self.backend.elapsed,
+                        "rate_5s": round(
+                            sum(
+                                [
+                                    round(float(val.hashrate.into(self.hash_unit)), 2)
+                                    for val in self.backend.boards
+                                ]
+                            ),
+                            2,
+                        ),
+                        "rate_30m": round(
+                            sum(
+                                [
+                                    round(float(val.hashrate.into(self.hash_unit)), 2)
+                                    for val in self.backend.boards
+                                ]
+                            ),
+                            2,
+                        ),
+                        "rate_avg": round(
+                            sum(
+                                [
+                                    round(float(val.hashrate.into(self.hash_unit)), 2)
+                                    for val in self.backend.boards
+                                ]
+                            ),
+                            2,
+                        ),
+                        "rate_ideal": round(
+                            sum(
+                                [
+                                    round(float(val.hashrate.into(self.hash_unit)), 2)
+                                    for val in self.backend.boards
+                                ]
+                            ),
+                            2,
+                        ),
+                        "rate_unit": str(self.hash_unit),
+                        "chain_num": len(self.backend.boards),
+                        "fan_num": self.backend.miner_info.fan_count,
+                        "fan": [fan.rpm for fan in self.backend.fans],
+                        "hwp_total": 0.0,
+                        "miner-mode": 0,
+                        "freq-level": 100,
+                        "chain": [
+                            {
+                                "index": i,
+                                "freq_avg": 545,
+                                "rate_ideal": float(
+                                    round(
+                                        float(
+                                            val.info.ideal_hashrate.into(self.hash_unit)
+                                        ),
+                                        2,
+                                    )
+                                ),
+                                "rate_real": float(
+                                    round(float(val.hashrate.into(self.hash_unit)), 2)
+                                ),
+                                "asic_num": val.chips,
+                                "asic": " ".join(
+                                    [
+                                        "".join(["o" * val.chips])[i : i + 3]
+                                        for i in range(0, val.chips, 3)
+                                    ]
+                                ),
+                                "temp_pic": [
+                                    round(val.info.board_temp) for _ in range(4)
+                                ],
+                                "temp_pcb": [
+                                    round(val.info.board_temp) for _ in range(4)
+                                ],
+                                "temp_chip": [
+                                    round(val.info.chip_temp) for _ in range(4)
+                                ],
+                                "hw": 0,
+                                "eeprom_loaded": True,
+                                "sn": f"REALSERIALNUMBER{i}",
+                                "hwp": 0.0,
+                            }
+                            for i, val in enumerate(self.backend.boards)
+                        ],
+                    }
+                ],
             },
         }
