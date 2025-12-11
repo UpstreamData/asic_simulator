@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import datetime
 import json
 import os
@@ -100,12 +101,33 @@ class AntminerWebHandler:
     async def run(self):
         app = FastAPI()
         app.include_router(self.router)
+        host = os.getenv("ASIC_WEB_HOST", "127.0.0.1")
+        port = int(os.getenv("ASIC_WEB_PORT", "8000"))
         cfg = hypercorn.Config()
-        cfg.bind = "0.0.0.0:80"
-
         cfg.loglevel = "ERROR"
 
-        await serve(app, cfg)
+        def _reserve(target_host: str, target_port: int):
+            try:
+                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+                    sock.bind((target_host, target_port))
+                    sock.listen(1)
+                    return sock.getsockname()[:2]
+            except OSError as exc:
+                log.failure("WEB", f"bind {target_host}:{target_port} failed ({exc})")
+                return None
+
+        bind_target = _reserve(host, port) or _reserve("127.0.0.1", 0)
+        if not bind_target:
+            log.failure("WEB", "web UI disabled in this environment")
+            return
+
+        bind_host, bind_port = bind_target
+        cfg.bind = f"{bind_host}:{bind_port}"
+
+        try:
+            await serve(app, cfg)
+        except Exception as exc:
+            log.failure("WEB", f"web UI failed to start ({exc}); web UI disabled")
 
     def html_pages(self, path: str):
         return FileResponse(os.path.join(self.web_dir, path))

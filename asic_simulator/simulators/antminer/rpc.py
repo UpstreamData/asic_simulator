@@ -1,6 +1,7 @@
 import asyncio
 import datetime
 import json
+import os
 
 from asic_simulator import log
 from asic_simulator.backend import MinerSimulatorBackend, HashUnit
@@ -22,9 +23,32 @@ class AntminerRPCHandler:
         }
 
     async def run(self):
-        server = await asyncio.start_server(self._handle_client, "0.0.0.0", 4028)
+        host = os.getenv("ASIC_RPC_HOST", "127.0.0.1")
+        port = int(os.getenv("ASIC_RPC_PORT", "4028"))
+        server = await self._start_server(host, port)
+        if server is None:
+            log.failure("RPC", "RPC listener disabled (no available bind address)")
+            return
+        sock_host, sock_port = server.sockets[0].getsockname()[:2]
+        log.startup(f"RPC listening on {sock_host}:{sock_port}")
         async with server:
             await server.serve_forever()
+
+    async def _start_server(self, host: str, port: int) -> asyncio.AbstractServer:
+        try:
+            return await asyncio.start_server(self._handle_client, host, port)
+        except OSError as exc:
+            log.failure(
+                "RPC", f"bind {host}:{port} failed ({exc}); retrying on random port"
+            )
+            try:
+                return await asyncio.start_server(self._handle_client, host, 0)
+            except OSError as final_exc:
+                log.failure(
+                    "RPC",
+                    f"bind {host}:0 failed ({final_exc}); cannot start RPC server",
+                )
+                return None
 
     async def _handle_client(
         self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter
