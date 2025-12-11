@@ -1,4 +1,6 @@
+import asyncio
 import os
+import socket
 
 import hypercorn
 from fastapi import FastAPI, APIRouter
@@ -6,6 +8,7 @@ from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
 from fastapi.responses import FileResponse
 from hypercorn.asyncio import serve
 
+from asic_simulator import log
 from asic_simulator.backend import MinerSimulatorBackend, HashUnit
 from asic_simulator.settings import SSL_PUBLIC_KEY, SSL_PRIVATE_KEY
 
@@ -33,14 +36,37 @@ class WhatsminerWebHandler:
         app.add_middleware(HTTPSRedirectMiddleware)
         app.include_router(self.router)
 
+        host = os.getenv("ASIC_WEB_HOST", "127.0.0.1")
+        http_port = int(os.getenv("ASIC_WEB_PORT", "8080"))
+
+        def _reserve(target_host: str, target_port: int):
+            try:
+                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+                    sock.bind((target_host, target_port))
+                    sock.listen(1)
+                    return sock.getsockname()[:2]
+            except OSError as exc:
+                log.failure("WEB", f"bind {target_host}:{target_port} failed ({exc})")
+                return None
+
+        http_target = _reserve(host, http_port) or _reserve("127.0.0.1", 0)
+        if not http_target:
+            log.failure("WEB", "web UI disabled in this environment")
+            return
+
+        http_host, http_bind_port = http_target
+
         cfg = hypercorn.Config()
-        cfg.bind = "0.0.0.0:443"
-        cfg.insecure_bind = "0.0.0.0:80"
+        cfg.bind = []  # disable TLS binding in restricted environments
+        cfg.insecure_bind = [f"{http_host}:{http_bind_port}"]
         cfg.keyfile = SSL_PRIVATE_KEY
         cfg.certfile = SSL_PUBLIC_KEY
         cfg.loglevel = "ERROR"
 
-        await serve(app, cfg)
+        try:
+            await serve(app, cfg)
+        except Exception as exc:
+            log.failure("WEB", f"web UI failed to start ({exc}); web UI disabled")
 
 
 if __name__ == "__main__":
