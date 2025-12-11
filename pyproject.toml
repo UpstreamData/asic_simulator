@@ -8,9 +8,14 @@ packages = [{include = "asic_simulator"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 fastapi = {git = "https://github.com/ordinary-jamie/fastapi.git", rev = "feat/http-digest"}
-cryptography = "^41.0.4"
+cryptography = ">=43,<44"
 passlib = "^1.7.4"
 hypercorn = "^0.14.4"
+pydantic = ">=2.12,<3"
+pydantic-core = ">=2.23,<3"
+annotated-types = ">=0.6,<1"
+typing-extensions = ">=4.14,<5"
+cffi = ">=1.16,<2"
 
 [tool.poetry.group.color]
 optional = true
