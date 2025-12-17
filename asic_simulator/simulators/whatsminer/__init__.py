@@ -1,4 +1,5 @@
 import asyncio
+import signal
 
 from asic_simulator import log
 from asic_simulator.backend import MinerSimulatorBackend
@@ -20,6 +21,30 @@ class WhatsminerSimulator:
         log.startup("startup complete")
 
         async def _run():
-            await asyncio.gather(self.rpc.run(), self.web.run())
+            stop_event = asyncio.Event()
+            loop = asyncio.get_running_loop()
+            for sig in (signal.SIGINT, signal.SIGTERM):
+                try:
+                    loop.add_signal_handler(sig, stop_event.set)
+                except NotImplementedError:
+                    # Signals are not supported on some platforms/event loops.
+                    pass
+
+            tasks = [
+                asyncio.create_task(self.rpc.run(), name="whatsminer-rpc"),
+                asyncio.create_task(self.web.run(), name="whatsminer-web"),
+            ]
+            stop_task = asyncio.create_task(stop_event.wait(), name="whatsminer-stop")
+            done, pending = await asyncio.wait(
+                [*tasks, stop_task], return_when=asyncio.FIRST_COMPLETED
+            )
+            if stop_task in done:
+                log.startup("shutdown requested")
+            for task in tasks:
+                if not task.done():
+                    task.cancel()
+            if not stop_task.done():
+                stop_task.cancel()
+            await asyncio.gather(*tasks, return_exceptions=True)
 
         asyncio.run(_run())
