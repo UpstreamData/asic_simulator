@@ -23,7 +23,7 @@ class AntminerRPCHandler:
         }
 
     async def run(self):
-        host = os.getenv("ASIC_RPC_HOST", "127.0.0.1")
+        host = os.getenv("ASIC_RPC_HOST", "0.0.0.0")
         port = int(os.getenv("ASIC_RPC_PORT", "4028"))
         server = await self._start_server(host, port)
         if server is None:
@@ -39,16 +39,9 @@ class AntminerRPCHandler:
             return await asyncio.start_server(self._handle_client, host, port)
         except OSError as exc:
             log.failure(
-                "RPC", f"bind {host}:{port} failed ({exc}); retrying on random port"
+                "RPC", f"bind {host}:{port} failed ({exc}); RPC listener disabled"
             )
-            try:
-                return await asyncio.start_server(self._handle_client, host, 0)
-            except OSError as final_exc:
-                log.failure(
-                    "RPC",
-                    f"bind {host}:0 failed ({final_exc}); cannot start RPC server",
-                )
-                return None
+            return None
 
     async def _handle_client(
         self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter

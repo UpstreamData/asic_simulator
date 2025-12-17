@@ -1,4 +1,3 @@
-import asyncio
 import os
 import socket
 
@@ -36,8 +35,9 @@ class WhatsminerWebHandler:
         app.add_middleware(HTTPSRedirectMiddleware)
         app.include_router(self.router)
 
-        host = os.getenv("ASIC_WEB_HOST", "127.0.0.1")
-        http_port = int(os.getenv("ASIC_WEB_PORT", "8080"))
+        host = os.getenv("ASIC_WEB_HOST", "0.0.0.0")
+        http_port = int(os.getenv("ASIC_WEB_PORT", "80"))
+        https_port = int(os.getenv("ASIC_WEB_TLS_PORT", "443"))
 
         def _reserve(target_host: str, target_port: int):
             try:
@@ -49,15 +49,17 @@ class WhatsminerWebHandler:
                 log.failure("WEB", f"bind {target_host}:{target_port} failed ({exc})")
                 return None
 
-        http_target = _reserve(host, http_port) or _reserve("127.0.0.1", 0)
-        if not http_target:
+        http_target = _reserve(host, http_port)
+        https_target = _reserve(host, https_port)
+        if not http_target or not https_target:
             log.failure("WEB", "web UI disabled in this environment")
             return
 
         http_host, http_bind_port = http_target
+        https_host, https_bind_port = https_target
 
         cfg = hypercorn.Config()
-        cfg.bind = []  # disable TLS binding in restricted environments
+        cfg.bind = [f"{https_host}:{https_bind_port}"]
         cfg.insecure_bind = [f"{http_host}:{http_bind_port}"]
         cfg.keyfile = SSL_PRIVATE_KEY
         cfg.certfile = SSL_PUBLIC_KEY
